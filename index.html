@@ -899,44 +899,191 @@ footer{background:var(--ink);padding:60px 5% 28px;border-top:1px solid rgba(242,
   <a class="cb-quote" href="#contact">Free Quote</a>
 </div>
 
-<!-- ══ RETELL AI CHAT WIDGET ══ -->
+<!-- ░░ SKYLINE STRIPING — CUSTOM CHATBOT (scripted, self-contained) ░░ -->
 <style>
-  body > button:not(#ss-btn-dummy),
-  [id*="retell-widget-fab"],
-  [class*="retell-fab"],
-  [class*="RetellFab"] {
-    background:#F26522 !important;border-radius:50% !important;
-    width:68px !important;height:68px !important;
-    bottom:84px !important;right:28px !important;
-    box-shadow:0 4px 24px rgba(242,101,34,0.55),0 2px 8px rgba(0,0,0,0.35) !important;
-    animation:ss-pulse 3s ease-in-out infinite !important;
-  }
-  @keyframes ss-pulse{
-    0%,100%{box-shadow:0 4px 24px rgba(242,101,34,0.55),0 2px 8px rgba(0,0,0,0.35)}
-    50%{box-shadow:0 4px 40px rgba(242,101,34,0.9),0 2px 8px rgba(0,0,0,0.35)}
-  }
-  @media(min-width:601px){
-    [id*="retell-widget-fab"],[class*="retell-fab"],[class*="RetellFab"]{bottom:28px !important;}
-  }
+#ssbot,#ssbot *{box-sizing:border-box}
+#ssbot{--ssor:#F26522;--ssord:#D4531A;--ssink:#1b2024;--sscard:#2b3137;--ssline:rgba(255,255,255,.1);font-family:'Inter',system-ui,sans-serif}
+#ssbot-fab{position:fixed;right:22px;bottom:28px;z-index:999999;width:64px;height:64px;border:none;border-radius:50%;background:var(--ssor);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(242,101,34,.5),0 2px 8px rgba(0,0,0,.35);transition:transform .2s,background .2s;animation:ssbot-pulse 3s ease-in-out infinite}
+#ssbot-fab:hover{background:var(--ssord);transform:scale(1.06)}
+#ssbot-fab svg{width:28px;height:28px;display:block}
+#ssbot-fab .ss-x{display:none}
+#ssbot.open #ssbot-fab .ss-chat{display:none}
+#ssbot.open #ssbot-fab .ss-x{display:block}
+#ssbot.open #ssbot-fab{animation:none}
+@keyframes ssbot-pulse{0%,100%{box-shadow:0 6px 24px rgba(242,101,34,.5),0 2px 8px rgba(0,0,0,.35)}50%{box-shadow:0 6px 42px rgba(242,101,34,.9),0 2px 8px rgba(0,0,0,.35)}}
+#ssbot-badge{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;border-radius:10px;background:#fff;color:var(--ssor);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 5px;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+#ssbot-teaser{position:fixed;right:22px;bottom:100px;z-index:999998;max-width:250px;background:#fff;color:#1a1a1a;padding:13px 16px;border-radius:14px 14px 4px 14px;font-size:14px;line-height:1.5;box-shadow:0 8px 30px rgba(0,0,0,.22);display:none;cursor:pointer}
+#ssbot-teaser.show{display:block;animation:ssbot-pop .3s cubic-bezier(.2,1,.3,1)}
+#ssbot-teaser b{color:var(--ssor)}
+@keyframes ssbot-pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#ssbot-panel{position:fixed;right:22px;bottom:100px;z-index:999999;width:min(370px,calc(100vw - 28px));height:min(540px,calc(100vh - 150px));background:var(--ssink);border:1px solid var(--ssline);border-radius:16px;overflow:hidden;display:none;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+#ssbot.open #ssbot-panel{display:flex;animation:ssbot-up .28s cubic-bezier(.2,1,.3,1)}
+@keyframes ssbot-up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.ssbot-head{display:flex;align-items:center;gap:11px;padding:15px 16px;background:linear-gradient(135deg,var(--ssor),var(--ssord));color:#fff}
+.ssbot-ava{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:22px;flex-shrink:0}
+.ssbot-name{font-weight:800;font-size:15px;line-height:1.2}
+.ssbot-status{font-size:11px;opacity:.92;display:flex;align-items:center;gap:5px;margin-top:1px}
+.ssbot-status i{width:7px;height:7px;border-radius:50%;background:#46e08a;display:inline-block;box-shadow:0 0 6px #46e08a}
+#ssbot-close{margin-left:auto;background:none;border:none;color:#fff;font-size:24px;cursor:pointer;line-height:1;opacity:.9;padding:4px 6px}
+#ssbot-close:hover{opacity:1}
+#ssbot-log{flex:1;overflow-y:auto;padding:18px 16px 6px;display:flex;flex-direction:column;gap:10px}
+#ssbot-log::-webkit-scrollbar{width:5px}#ssbot-log::-webkit-scrollbar-thumb{background:var(--ssor);border-radius:3px}
+.ssbot-msg{max-width:84%;padding:11px 14px;font-size:14px;line-height:1.55;border-radius:14px;word-wrap:break-word}
+.ssbot-msg.bot{align-self:flex-start;background:var(--sscard);color:#e7eaee;border-bottom-left-radius:4px}
+.ssbot-msg.user{align-self:flex-end;background:var(--ssor);color:#fff;border-bottom-right-radius:4px}
+.ssbot-msg a{color:var(--ssor);font-weight:700;text-decoration:none}
+.ssbot-msg.user a{color:#fff;text-decoration:underline}
+.ssbot-msg ul{margin:6px 0 0;padding-left:18px}.ssbot-msg li{margin:2px 0}
+.ssbot-typing{align-self:flex-start;background:var(--sscard);padding:13px 16px;border-radius:14px;border-bottom-left-radius:4px;display:flex;gap:4px}
+.ssbot-typing span{width:7px;height:7px;border-radius:50%;background:#9097a0;animation:ssbot-bl 1.2s infinite}
+.ssbot-typing span:nth-child(2){animation-delay:.2s}.ssbot-typing span:nth-child(3){animation-delay:.4s}
+@keyframes ssbot-bl{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-4px)}}
+#ssbot-chips{display:flex;flex-wrap:wrap;gap:7px;padding:4px 16px 10px}
+.ssbot-chip{background:transparent;border:1.5px solid var(--ssor);color:var(--ssor);font-family:inherit;font-size:12.5px;font-weight:600;padding:8px 13px;border-radius:18px;cursor:pointer;transition:background .15s,color .15s}
+.ssbot-chip:hover{background:var(--ssor);color:#fff}
+.ssbot-chip.solid{background:var(--ssor);color:#fff}.ssbot-chip.solid:hover{background:var(--ssord)}
+#ssbot-form{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--ssline);background:rgba(0,0,0,.18)}
+#ssbot-input{flex:1;background:#23282d;border:1px solid var(--ssline);color:#fff;border-radius:22px;padding:11px 15px;font-family:inherit;font-size:14px;outline:none}
+#ssbot-input:focus{border-color:var(--ssor)}
+#ssbot-send{width:42px;height:42px;border:none;border-radius:50%;background:var(--ssor);color:#fff;font-size:18px;cursor:pointer;flex-shrink:0;transition:background .15s}
+#ssbot-send:hover{background:var(--ssord)}
+.ssbot-foot{text-align:center;font-size:11px;color:#8a9099;padding:7px 10px 9px}
+.ssbot-foot a{color:var(--ssor);text-decoration:none;font-weight:700}
+@media(max-width:600px){
+  #ssbot-fab{bottom:84px;right:16px}
+  #ssbot-teaser{bottom:156px;right:16px}
+  #ssbot-panel{bottom:84px;right:8px;left:8px;width:auto;height:min(540px,calc(100vh - 120px))}
+}
 </style>
 
-<script
-  id="retell-widget"
-  src="https://dashboard.retellai.com/retell-widget-v2.js"
-  type="module"
-  data-public-key="public_key_ed06a95bff844acb978fb"
-  data-agent-id="agent_b3fc299568658aa3a04a355491"
-  data-title="Skyline Striping Assistant"
-  data-color="#F26522"
-  data-theme-color="#3C4041"
-  data-component-color="#F26522"
-  data-fab-text="Chat with us"
-  data-bot-name="Skyline Assistant"
-  data-popup-message="Hi! Ask me about parking lot striping, ADA compliance, or get a free estimate 👋"
-  data-show-ai-popup="true"
-  data-show-ai-popup-time="5"
-  data-auto-open="false"
-></script>
-<!-- ══ END RETELL WIDGET ══ -->
+<div id="ssbot" aria-live="polite">
+  <div id="ssbot-teaser">👋 Questions? Ask me about striping, ADA, or get a <b>free quote</b>.</div>
+  <div id="ssbot-panel" role="dialog" aria-label="Skyline Striping chat assistant">
+    <div class="ssbot-head">
+      <div class="ssbot-ava">S</div>
+      <div>
+        <div class="ssbot-name">Skyline Assistant</div>
+        <div class="ssbot-status"><i></i> Online · replies instantly</div>
+      </div>
+      <button id="ssbot-close" aria-label="Close chat">&times;</button>
+    </div>
+    <div id="ssbot-log"></div>
+    <div id="ssbot-chips"></div>
+    <form id="ssbot-form" autocomplete="off">
+      <input id="ssbot-input" type="text" placeholder="Type your question…" aria-label="Type your message"/>
+      <button id="ssbot-send" type="submit" aria-label="Send message">&#8594;</button>
+    </form>
+    <div class="ssbot-foot">Prefer to talk? <a href="tel:+18457978049">(845) 797-8049</a></div>
+  </div>
+  <button id="ssbot-fab" aria-label="Open chat" aria-expanded="false">
+    <svg class="ss-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+    <svg class="ss-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    <span id="ssbot-badge">1</span>
+  </button>
+</div>
+
+<script>
+(function(){
+  var PHONE="(845) 797-8049", TEL="tel:+18457978049", EMAIL="mike@skylinestriping.com";
+  var root=document.getElementById("ssbot"), fab=document.getElementById("ssbot-fab"),
+      panel=document.getElementById("ssbot-panel"), log=document.getElementById("ssbot-log"),
+      chipsEl=document.getElementById("ssbot-chips"), form=document.getElementById("ssbot-form"),
+      input=document.getElementById("ssbot-input"), closeBtn=document.getElementById("ssbot-close"),
+      teaser=document.getElementById("ssbot-teaser"), badge=document.getElementById("ssbot-badge");
+  var opened=false, lead={}, state="idle";
+
+  var GREET_CHIPS=[
+    {label:"Our services",act:"services"},
+    {label:"Free quote",act:"quote",solid:true},
+    {label:"ADA compliance",act:"ada"},
+    {label:"Service area",act:"area"},
+    {label:"Hours",act:"hours"},
+    {label:"Talk to a person",act:"human"}
+  ];
+  var TOPICS={
+    services:{a:"We handle the full range of pavement marking:<ul><li>Parking lot striping &amp; re-stripes</li><li>Airport / tarmac striping (FAA-grade)</li><li>ADA compliance marking</li><li>Game court lines (basketball, tennis)</li><li>Sealcoating &amp; asphalt repair</li><li>Bumpers, signage &amp; night work</li></ul>What can we quote for you?",c:[{label:"Free quote",act:"quote",solid:true},{label:"ADA compliance",act:"ada"},{label:"Talk to a person",act:"human"}]},
+    ada:{a:"Yes — we're fully current on all ADA requirements. We mark accessible &amp; van-accessible spaces, crosswalks, curb ramps and signage to full legal spec, and we'll advise you on anything that's out of compliance.",c:[{label:"Free quote",act:"quote",solid:true},{label:"Our services",act:"services"}]},
+    area:{a:"We're based in Dix Hills, NY and cover the whole Tri-State area: all of Long Island (Suffolk &amp; Nassau), NYC, New Jersey and Connecticut.",c:[{label:"Free quote",act:"quote",solid:true},{label:"Hours",act:"hours"}]},
+    hours:{a:"Office hours are Mon–Fri 8am–5pm, Sat 9am–3pm (closed Sunday). We also work nights &amp; weekends so your business never loses parking during a job.",c:[{label:"Free quote",act:"quote",solid:true},{label:"Talk to a person",act:"human"}]},
+    night:{a:"Absolutely — night &amp; after-hours striping is one of our specialties. We'll stripe overnight so everything's perfect and dry before you open, with zero lost parking.",c:[{label:"Free quote",act:"quote",solid:true},{label:"Our services",act:"services"}]},
+    airport:{a:"Airport &amp; tarmac striping is a specialty of ours — FAA-grade precision on runways, taxiways, tarmacs and aprons across Long Island and NY.",c:[{label:"Free quote",act:"quote",solid:true},{label:"Our services",act:"services"}]},
+    courts:{a:"Yes — we lay out basketball, tennis and multi-sport court lines in any color for schools, parks, towns and private facilities.",c:[{label:"Free quote",act:"quote",solid:true},{label:"Our services",act:"services"}]},
+    pricing:{a:"Every job is quoted free after we look at your lot — fair, competitive pricing with no surprises. Want me to start a free estimate?",c:[{label:"Yes, free quote",act:"quote",solid:true},{label:"Call now",act:"human"}]}
+  };
+
+  function esc(s){return (s||"").replace(/[<>&]/g,function(c){return c=="<"?"&lt;":c==">"?"&gt;":"&amp;";});}
+  function scroll(){log.scrollTop=log.scrollHeight;}
+  function bubble(html,who){var d=document.createElement("div");d.className="ssbot-msg "+who;d.innerHTML=html;log.appendChild(d);scroll();return d;}
+  function userMsg(t){bubble(esc(t),"user");}
+  function chips(arr){chipsEl.innerHTML="";(arr||[]).forEach(function(c){var b=document.createElement("button");b.className="ssbot-chip"+(c.solid?" solid":"");b.textContent=c.label;b.onclick=function(){handle(c.act,c.label);};chipsEl.appendChild(b);});}
+  function botSay(html,after){
+    var t=document.createElement("div");t.className="ssbot-typing";t.innerHTML="<span></span><span></span><span></span>";log.appendChild(t);scroll();
+    setTimeout(function(){t.remove();bubble(html,"bot");if(after)after();},450);
+  }
+
+  function open(){if(opened)return;opened=true;root.classList.add("open");fab.setAttribute("aria-expanded","true");teaser.classList.remove("show");badge.style.display="none";if(!log.children.length)greet();setTimeout(function(){input.focus();},300);}
+  function close(){opened=false;root.classList.remove("open");fab.setAttribute("aria-expanded","false");}
+  function greet(){botSay("👋 Hi! I'm the Skyline Striping assistant. I can answer quick questions or set you up with a <b>free estimate</b>. What do you need?",function(){chips(GREET_CHIPS);});}
+
+  function handle(act,label){
+    if(label) userMsg(label);
+    if(TOPICS[act]){var tp=TOPICS[act];botSay(tp.a,function(){chips(tp.c);});return;}
+    if(act=="human"){botSay("You can reach owner Mike directly:<br>📞 <a href=\""+TEL+"\">"+PHONE+"</a><br>✉️ <a href=\"mailto:"+EMAIL+"\">"+EMAIL+"</a><br>He'll get you a free estimate fast.",function(){chips([{label:"Call "+PHONE,act:"call",solid:true},{label:"Get a free quote",act:"quote"}]);});return;}
+    if(act=="call"){window.location.href=TEL;return;}
+    if(act=="quote"){startQuote();return;}
+    if(act=="restart"){log.innerHTML="";lead={};state="idle";greet();return;}
+  }
+
+  // ── Lead-capture flow ──
+  function startQuote(){lead={};state="name";botSay("Great — let's get you a free quote! First, what's your <b>name</b>?",function(){chips([]);});}
+  var SERVICE_CHIPS=[{label:"Parking lot striping",act:"svc"},{label:"Re-stripe",act:"svc"},{label:"Airport / tarmac",act:"svc"},{label:"ADA marking",act:"svc"},{label:"Sealcoating",act:"svc"},{label:"Other",act:"svc"}];
+  function handleLeadText(t){
+    if(state=="name"){lead.name=t;state="contact";botSay("Thanks, "+esc(t.split(" ")[0])+"! What's the best <b>phone or email</b> to reach you?");return true;}
+    if(state=="contact"){lead.contact=t;state="service";botSay("Got it. And what <b>service</b> do you need? (Tap one or type it.)",function(){chips(SERVICE_CHIPS);});return true;}
+    if(state=="service"){finishQuote(t);return true;}
+    return false;
+  }
+  function finishQuote(svc){
+    lead.service=svc;state="idle";chips([]);
+    var subject="Quote Request — "+lead.name,
+        body="Name: "+lead.name+"\nContact: "+lead.contact+"\nService: "+lead.service+"\n\n(Sent from the website chat assistant.)";
+    var mailto="mailto:"+EMAIL+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
+    botSay("Perfect — here's what I've got:<br>👤 "+esc(lead.name)+"<br>📞 "+esc(lead.contact)+"<br>🛠️ "+esc(lead.service)+"<br><br>Tap below to send it to Mike, or call now and skip the wait.",function(){
+      chipsEl.innerHTML="";
+      var a=document.createElement("a");a.href=mailto;a.className="ssbot-chip solid";a.textContent="✉️ Send to Mike";a.style.textDecoration="none";chipsEl.appendChild(a);
+      var c=document.createElement("a");c.href=TEL;c.className="ssbot-chip";c.textContent="📞 Call "+PHONE;c.style.textDecoration="none";chipsEl.appendChild(c);
+      var r=document.createElement("button");r.className="ssbot-chip";r.textContent="Start over";r.onclick=function(){handle("restart");};chipsEl.appendChild(r);
+    });
+  }
+
+  // ── Free-text routing ──
+  function route(t){
+    var s=t.toLowerCase();
+    if(state!="idle"){handleLeadText(t);return;}
+    function has(){for(var i=0;i<arguments.length;i++){if(s.indexOf(arguments[i])>-1)return true;}return false;}
+    if(has("ada","handicap","accessib","complian")) return handle("ada");
+    if(has("price","cost","quote","estimate","how much","$")) return handle("quote");
+    if(has("area","where","serve","location","near me","long island","nassau","suffolk","jersey","connecticut")) return handle("area");
+    if(has("hour","open","time","when")) return handle("hours");
+    if(has("night","weekend","after hour","overnight")) return handle("night");
+    if(has("airport","runway","tarmac","taxiway")) return handle("airport");
+    if(has("tennis","basketball","court","pickle")) return handle("courts");
+    if(has("seal","crack","asphalt","pothole")) return handle("services");
+    if(has("service","what do you","offer","do you do")) return handle("services");
+    if(has("human","person","mike","call","phone","talk","speak","contact","email")) return handle("human");
+    if(has("hi","hello","hey","yo ")) return botSay("Hey! 👋 I can tell you about our services, ADA work, service area, or set up a free quote. What would you like?",function(){chips(GREET_CHIPS);});
+    botSay("Good question — the fastest way to get an exact answer is a quick chat with Mike, or I can start a free quote for you.",function(){chips([{label:"Free quote",act:"quote",solid:true},{label:"Talk to a person",act:"human"},{label:"Our services",act:"services"}]);});
+  }
+
+  form.addEventListener("submit",function(e){e.preventDefault();var t=input.value.trim();if(!t)return;userMsg(t);input.value="";route(t);});
+  fab.addEventListener("click",function(){opened?close():open();});
+  closeBtn.addEventListener("click",close);
+  teaser.addEventListener("click",open);
+  document.addEventListener("keydown",function(e){if(e.key=="Escape"&&opened)close();});
+  setTimeout(function(){if(!opened)teaser.classList.add("show");},6000);
+  setTimeout(function(){teaser.classList.remove("show");},16000);
+})();
+</script>
+<!-- ░░ END CUSTOM CHATBOT ░░ -->
 </body>
 </html>
