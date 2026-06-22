@@ -195,7 +195,7 @@ h2.st{font-family:var(--fd);font-size:clamp(42px,5.5vw,70px);line-height:.93;let
 .si{width:52px;height:52px;background:var(--orp);border:1px solid var(--orb);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px}
 .sct{font-family:var(--fd);font-size:26px;letter-spacing:1.5px;margin-bottom:10px;color:var(--w)}
 .scd{font-size:14px;line-height:1.68;color:var(--bo)}
-.ssvg{width:100%;height:110px;margin-bottom:14px;border-radius:4px;overflow:hidden;display:block}
+.ssvg{width:100%;height:110px;margin-bottom:14px;border-radius:4px;overflow:hidden;display:block}.ada-banner{display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 42%,#363d44,#23282d)}.ada-badge{height:100px;width:auto;display:block;filter:drop-shadow(0 5px 16px rgba(0,0,0,.5))}
 
 /* WHY */
 #why{background:var(--ash)}
@@ -539,14 +539,7 @@ footer{background:var(--ink);padding:60px 5% 28px;border-top:1px solid rgba(242,
     </div>
 
     <div class="sc">
-      <svg class="ssvg" viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <rect width="300" height="110" fill="#2c3035" rx="3"/>
-        <rect x="40" y="22" width="80" height="66" rx="4" fill="#2f5fc0" opacity="0.85"/>
-        <circle cx="80" cy="42" r="7" fill="#fff"/>
-        <path d="M73,52 L71,68 L64,68 L67,84 L78,78 L76,68 L86,68 L88,84 L95,78 L90,68 L86,68 L87,52 Z" fill="#fff"/>
-        <text x="210" y="52" font-family="Bebas Neue,sans-serif" font-size="22" fill="#F26522" opacity="0.75" text-anchor="middle" letter-spacing="2">ADA</text>
-        <text x="210" y="70" font-family="Inter,sans-serif" font-size="8" fill="#F26522" opacity="0.6" text-anchor="middle" letter-spacing="1.5" font-weight="700">COMPLIANT</text>
-      </svg>
+      <div class="ssvg ada-banner"><img src="ada.png" alt="ADA Compliance &mdash; Accessible Resources &amp; Standards" loading="lazy" class="ada-badge"/></div>
       <div class="sct">ADA Compliance</div>
       <p class="scd">Fully current on all ADA requirements. Accessible spaces, crosswalks, and signage marked to full legal spec &mdash; and every compliance question answered.</p>
     </div>
