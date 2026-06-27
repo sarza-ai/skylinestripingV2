@@ -166,10 +166,10 @@ h2.st{font-family:var(--fd);font-size:clamp(42px,5.5vw,70px);line-height:.93;let
 /* ABOUT */
 #about{background:var(--ash2)}
 .ag{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
-.asr{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.asc{background:var(--ash3);border:1px solid var(--line);border-top:3px solid var(--or);padding:26px 22px}
-.ascn{font-family:var(--fd);font-size:50px;color:var(--or);line-height:1}
-.ascl{font-size:12px;color:var(--bo);margin-top:6px;line-height:1.45}
+.asr{display:flex;flex-direction:column;gap:16px}
+.trust-label{font-family:var(--fd);font-size:22px;letter-spacing:2px;color:var(--or);text-transform:uppercase;text-align:center}
+.trust-imgs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.trust-imgs img{width:100%;height:160px;object-fit:cover;border-radius:3px;border:1px solid var(--line)}
 .ap{font-size:15px;line-height:1.75;color:var(--bo);margin-top:18px}
 
 /* BEFORE / AFTER */
@@ -367,8 +367,8 @@ footer{background:var(--ink);padding:60px 5% 28px;border-top:1px solid rgba(242,
   .tbi{font-size:10px}
   section{padding:72px 5%}
   .ag{grid-template-columns:1fr;gap:40px}
-  .asr{grid-template-columns:1fr 1fr;gap:14px}
-  .ascn{font-size:42px}
+  .trust-imgs{grid-template-columns:1fr 1fr 1fr;gap:6px}
+  .trust-imgs img{height:130px}
   .sg{grid-template-columns:1fr 1fr;gap:3px}
   .wg{grid-template-columns:1fr;gap:40px}
   .wh{position:static}
@@ -400,8 +400,8 @@ footer{background:var(--ink);padding:60px 5% 28px;border-top:1px solid rgba(242,
   section{padding:56px 4%}
   h2.st{font-size:clamp(38px,12vw,58px);letter-spacing:2px}
   .sb{font-size:15px}
-  .asr{grid-template-columns:1fr 1fr;gap:10px}
-  .ascn{font-size:36px}
+  .trust-imgs{grid-template-columns:1fr;gap:8px}
+  .trust-imgs img{height:180px}
   .sg{grid-template-columns:1fr;gap:3px}
   .sct{font-size:24px}
   .wn{font-size:30px;min-width:40px}
@@ -508,10 +508,12 @@ footer{background:var(--ink);padding:60px 5% 28px;border-top:1px solid rgba(242,
       </a>
     </div>
     <div class="asr">
-      <div class="asc"><div class="ascn">5.0</div><div class="ascl">Star Rating<br/>Across Every Review</div></div>
-      <div class="asc"><div class="ascn">11+</div><div class="ascl">Years Serving Long Island<br/>&amp; New York City</div></div>
-      <div class="asc"><div class="ascn">FAA</div><div class="ascl">Airport Grade Precision<br/>On Every Project</div></div>
-      <div class="asc"><div class="ascn">ADA</div><div class="ascl">Fully Certified &amp; Current<br/>on All Compliance Laws</div></div>
+      <div class="trust-label">Trusted by Big Brands</div>
+      <div class="trust-imgs">
+        <img src="gallery/corporate/4.jpg" alt="Best Buy parking lot striping by Skyline Striping" loading="lazy"/>
+        <img src="gallery/corporate/2.jpg" alt="Dunkin' parking lot striping by Skyline Striping" loading="lazy"/>
+        <img src="gallery/corporate.jpg" alt="Starbucks parking lot striping by Skyline Striping" loading="lazy"/>
+      </div>
     </div>
   </div>
 </section>
