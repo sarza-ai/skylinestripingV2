@@ -1107,18 +1107,18 @@ footer{background:var(--ink);padding:60px 5% 28px;border-top:1px solid rgba(242,
 <script>
 (function(){
   var _data={
-    ada:        {label:'ADA Compliant',count:22},
+    ada:        {label:'ADA Compliant',count:13},
     corporate:  {label:'Corporate Clients',count:4},
     courts:     {label:'Courts',count:11},
-    fresh:      {label:'Fresh Lines',count:10},
+    fresh:      {label:'Fresh Lines',count:6},
     night:      {label:'Night Work',count:7},
-    garages:    {label:'Parking Garages',count:14},
+    garages:    {label:'Parking Garages',count:9},
     restriping: {label:'Parking Lot Striping & Restriping',count:6},
     special:    {label:'Special Lines',count:25},
     wip:        {label:'Work in Process',count:2}
   };
   var AUTO_MS=4000;
-  var _slug,_idx,_total,_timer=null,_paused=false;
+  var _slug,_idx,_total,_timer=null;
   var lb=document.getElementById('glb'),img=document.getElementById('glb-img'),
       lbl=document.getElementById('glb-label'),cnt=document.getElementById('glb-count'),
       btnP=document.getElementById('glb-p'),btnN=document.getElementById('glb-n');
@@ -1128,8 +1128,7 @@ footer{background:var(--ink);padding:60px 5% 28px;border-top:1px solid rgba(242,
   document.body.appendChild(prog);
 
   function startAuto(){
-    stopAuto();
-    if(_paused)return;
+    if(_timer){clearTimeout(_timer);_timer=null;}
     prog.style.animation='none';
     prog.offsetHeight;
     prog.style.animation='glb-prog '+AUTO_MS+'ms linear forwards';
@@ -1145,7 +1144,7 @@ footer{background:var(--ink);padding:60px 5% 28px;border-top:1px solid rgba(242,
   }
 
   window.openLb=function(slug){
-    _slug=slug; _idx=0; _paused=false;
+    _slug=slug; _idx=0;
     var d=_data[slug]; _total=d.count+1;
     lbl.textContent=d.label;
     lb.style.display='flex';
@@ -1170,9 +1169,6 @@ footer{background:var(--ink);padding:60px 5% 28px;border-top:1px solid rgba(242,
     btnP.style.visibility='visible';
     btnN.style.visibility='visible';
   }
-
-  lb.addEventListener('mouseenter',function(){_paused=true;stopAuto();});
-  lb.addEventListener('mouseleave',function(){_paused=false;if(lb.style.display==='flex')startAuto();});
 
   document.addEventListener('keydown',function(e){
     if(lb.style.display!=='flex')return;
