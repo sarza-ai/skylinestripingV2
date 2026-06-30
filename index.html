@@ -794,12 +794,12 @@ footer{background:var(--ink);padding:60px 5% 28px;border-top:1px solid rgba(242,
 </section>
 
 <script>
-/* Contact form: validates, then submits.
-   - If FORM_ENDPOINT is set (e.g. a Formspree URL), it POSTs via fetch (true AJAX).
-   - Otherwise it falls back to a prefilled mailto: so leads are never silently dropped.
-   Set FORM_ENDPOINT to go fully serverless-async. */
+/* Contact form: validates, then submits via Web3Forms (serverless AJAX).
+   Falls back to a prefilled mailto: if the network request fails, so leads
+   are never silently dropped. */
 (function(){
-  var FORM_ENDPOINT=''; /* SETUP: Create free account at formspree.io, add form, paste URL here e.g. 'https://formspree.io/f/yourID' */
+  var FORM_ENDPOINT='https://api.web3forms.com/submit';
+  var ACCESS_KEY='defe1900-3921-4a37-8ba1-e4a85f2989dd';
   var form=document.getElementById('quote-form'),ok=document.getElementById('form-ok');
   function showOk(){form.style.display='none';ok.classList.add('show');ok.scrollIntoView({behavior:'smooth',block:'center'});}
   form.addEventListener('submit',function(e){
@@ -817,12 +817,20 @@ footer{background:var(--ink);padding:60px 5% 28px;border-top:1px solid rgba(242,
       phone:form.phone.value.trim(),service:form.service.value,details:form.details.value.trim()
     };
     var btn=form.querySelector('.fsb');btn.disabled=true;btn.textContent='Sending…';
-    if(FORM_ENDPOINT){
-      fetch(FORM_ENDPOINT,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify(data)})
-        .then(function(r){showOk();}).catch(function(){mailtoFallback(data);showOk();});
-    }else{
-      mailtoFallback(data);showOk();
-    }
+    var payload={
+      access_key:ACCESS_KEY,
+      subject:'New Quote Request: '+data.service+', '+data.first+' '+data.last,
+      from_name:'Skyline Striping Website',
+      name:data.first+' '+data.last,
+      email:data.email,
+      phone:data.phone,
+      service:data.service,
+      message:data.details||'(No additional details provided)'
+    };
+    fetch(FORM_ENDPOINT,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify(payload)})
+      .then(function(r){return r.json();})
+      .then(function(res){if(res.success){showOk();}else{mailtoFallback(data);showOk();}})
+      .catch(function(){mailtoFallback(data);showOk();});
   });
   function mailtoFallback(d){
     var subject='Quote Request: '+d.service+', '+d.first+' '+d.last;
