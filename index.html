@@ -1100,6 +1100,10 @@ footer{background:var(--ink);padding:60px 5% 28px;border-top:1px solid rgba(242,
   <div id="glb-info"><span id="glb-label"></span><span id="glb-count"></span></div>
 </div>
 
+<style>
+#glb-progress{position:fixed;bottom:0;left:0;width:0;height:3px;background:var(--or);z-index:9001;border-radius:0 2px 2px 0}
+@keyframes glb-prog{from{width:0}to{width:100%}}
+</style>
 <script>
 (function(){
   var _data={
@@ -1113,34 +1117,63 @@ footer{background:var(--ink);padding:60px 5% 28px;border-top:1px solid rgba(242,
     special:    {label:'Special Lines',count:25},
     wip:        {label:'Work in Process',count:2}
   };
-  var _slug,_idx,_total;
+  var AUTO_MS=4000;
+  var _slug,_idx,_total,_timer=null,_paused=false;
   var lb=document.getElementById('glb'),img=document.getElementById('glb-img'),
       lbl=document.getElementById('glb-label'),cnt=document.getElementById('glb-count'),
       btnP=document.getElementById('glb-p'),btnN=document.getElementById('glb-n');
 
+  var prog=document.createElement('div');
+  prog.id='glb-progress';
+  document.body.appendChild(prog);
+
+  function startAuto(){
+    stopAuto();
+    if(_paused)return;
+    prog.style.animation='none';
+    prog.offsetHeight;
+    prog.style.animation='glb-prog '+AUTO_MS+'ms linear forwards';
+    _timer=setTimeout(function(){
+      _idx=(_idx+1)%_total;
+      lbRender();
+      startAuto();
+    },AUTO_MS);
+  }
+  function stopAuto(){
+    if(_timer){clearTimeout(_timer);_timer=null;}
+    prog.style.animation='none';
+  }
+
   window.openLb=function(slug){
-    _slug=slug; _idx=0;
+    _slug=slug; _idx=0; _paused=false;
     var d=_data[slug]; _total=d.count+1;
     lbl.textContent=d.label;
     lb.style.display='flex';
     document.body.style.overflow='hidden';
     lbRender();
+    startAuto();
   };
   window.closeLb=function(){
+    stopAuto();
     lb.style.display='none';
     document.body.style.overflow='';
     img.src='';
   };
   window.lbNav=function(dir){
-    _idx=Math.max(0,Math.min(_total-1,_idx+dir));
+    _idx=(_idx+dir+_total)%_total;
     lbRender();
+    startAuto();
   };
   function lbRender(){
     img.src=_idx===0?'gallery/'+_slug+'.jpg':'gallery/'+_slug+'/'+_idx+'.jpg';
     cnt.textContent=(_idx+1)+' / '+_total;
-    btnP.style.visibility=_idx>0?'visible':'hidden';
-    btnN.style.visibility=_idx<_total-1?'visible':'hidden';
+    btnP.style.visibility='visible';
+    btnN.style.visibility='visible';
   }
+
+  lb.addEventListener('mouseenter',function(){_paused=true;stopAuto();});
+  lb.addEventListener('mouseleave',function(){_paused=false;if(lb.style.display==='flex')startAuto();});
+
   document.addEventListener('keydown',function(e){
     if(lb.style.display!=='flex')return;
     if(e.key==='ArrowLeft')lbNav(-1);
